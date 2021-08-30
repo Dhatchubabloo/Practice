@@ -22,7 +22,6 @@ public class Permutation {
             }
         }
     }
-
     private static String swap(String word, int i, int j) {
        char array[] = word.toCharArray();
        char temp = array[i];
