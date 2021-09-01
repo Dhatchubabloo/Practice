@@ -63,7 +63,11 @@ public class Runner {
                 System.out.println("Booking-id | From | To | pick-time | drop-time | amount");
                 for(Map.Entry entry: logic.getBookingDetails().entrySet()){
                     System.out.println("Taxi -"+entry.getKey());
-                    System.out.println(entry.getValue());
+                    ArrayList<BookingInfo> list = (ArrayList<BookingInfo>) entry.getValue();
+                   for(int i=0;i<list.size();i++){
+                       list.get(i).setBookingId(i+1);
+                       System.out.println(list.get(i));
+                   }
                 }
                 execution();
                 break;
