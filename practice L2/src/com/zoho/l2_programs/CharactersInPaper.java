@@ -11,13 +11,8 @@ public class CharactersInPaper {
         for(int i=1;i<=number;i++){
             int temp =i;
             while(temp>0) {
-                if (temp % 10 == 0) {
                     count++;
                     temp=temp/10;
-                } else {
-                    count++;
-                    temp = temp/10;
-                }
             }
         }
         System.out.println(count);

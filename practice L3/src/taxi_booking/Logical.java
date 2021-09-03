@@ -23,10 +23,13 @@ public class Logical {
         }
         Cache.OBJECT.setBookingData(bookingMap);
     }
+
+
     ArrayList<BookingInfo> taxi1 = new ArrayList();
     ArrayList<BookingInfo> taxi2 = new ArrayList();
     ArrayList<BookingInfo> taxi3 = new ArrayList();
     ArrayList<BookingInfo> taxi4 = new ArrayList();
+
     public ArrayList<Integer>  booking(ArrayList<BookingInfo> list){
         HashMap<Integer,TaxiInfo> taxiMap = Cache.OBJECT.getTaxiData();
         ArrayList<Integer> display = new ArrayList<>();
@@ -41,6 +44,7 @@ public class Logical {
         int dropTime = pt+(Math.abs(pp-dp));
         bookingInfo.setDropTime(dropTime);
         display.add(amount);
+        int count=0;
         for(Map.Entry entry:taxiMap.entrySet()){
             TaxiInfo taxinfo = (TaxiInfo) entry.getValue();
             int cp = taxinfo.getcurrentPoint();
@@ -62,6 +66,8 @@ public class Logical {
                  }
                  taxinfo.setFreeTime(dropTime);
                  taxinfo.setcurrentPoint((char)dp);
+                 int prevAmount = taxinfo.getTotalAmount();
+                 taxinfo.setTotalAmount(prevAmount+amount);
                  idUpdation(taxiId,dataList);
                 display.add(taxiId);
                 taxinfo.setFreeTime(dropTime);
@@ -69,51 +75,55 @@ public class Logical {
             }
             else if(pt>=taxinfo.getFreeTime()){
                 int diff =Math.abs(cp-pp);
-                int taxi = (int) entry.getKey();
+                taxiId = (int) entry.getKey();
+                TaxiInfo info =null;
                 for(Map.Entry entry1:taxiMap.entrySet()) {
-                        TaxiInfo info = (TaxiInfo) entry1.getValue();
-                        cp =info.getcurrentPoint();
-                        int diff1 = Math.abs(cp-pp);
-                        if(diff1<=diff){
-                            taxi = (int) entry1.getKey();
-                        }
+                    info = (TaxiInfo) entry1.getValue();
+                    cp = info.getcurrentPoint();
+                    int diff1 = Math.abs(cp - pp);
+                    if (diff1 <= diff) {
+                        taxiId = (int) entry1.getKey();
+                    }
                 }
-                if(taxi==1){
+                if(taxiId==1){
                     taxi1.add(bookingInfo);
                     dataList = taxi1;
-                }else if(taxi==2){
+                }else if(taxiId==2){
                     taxi2.add(bookingInfo);
                     dataList = taxi2;
-                }else if(taxi==3){
+                }else if(taxiId==3){
                     taxi3.add(bookingInfo);
                     dataList = taxi3;
                 }else{
                     taxi4.add(bookingInfo);
                     dataList = taxi4;
                 }
-                taxinfo.setFreeTime(dropTime);
-                taxinfo.setcurrentPoint((char)dp);
-                idUpdation(taxi,dataList);
-                display.add(taxi);
-                taxinfo.setFreeTime(dropTime);
+                info.setFreeTime(dropTime);
+                info.setcurrentPoint((char)dp);
+                int prevAmount = info.getTotalAmount();
+                info.setTotalAmount(prevAmount+amount);
+                idUpdation(taxiId,dataList);
+                display.add(taxiId);
+                info.setFreeTime(dropTime);
                 break;
             }
             else
-                System.out.println("No taxies available");
+                count++;
 
         }
+        display.add(count);
         return display;
     }
-    public void taxiChooser(int taxi){
 
-    }
-
-    private void idUpdation(int taxiId,ArrayList<BookingInfo> info) {
+    public void idUpdation(int taxiId,ArrayList<BookingInfo> info) {
         for(Map.Entry<Integer,ArrayList<BookingInfo>> entry:Cache.OBJECT.getBookingData().entrySet()){
             if(entry.getKey()==taxiId){
                 Cache.OBJECT.bookingUpdation(entry.getKey(), info);
             }
         }
+    }
+    public HashMap<Integer,TaxiInfo> getTaxiDetails(){
+        return Cache.OBJECT.getTaxiData();
     }
 
     public  HashMap<Integer,ArrayList<BookingInfo>> getBookingDetails(){

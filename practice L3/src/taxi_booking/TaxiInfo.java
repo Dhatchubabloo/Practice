@@ -4,6 +4,15 @@ public class TaxiInfo {
     private int taxiId;
     private char currentPoint;
     private int freeTime;
+    private int totalAmount;
+
+    public int getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public int getTaxiId() {
         return taxiId;
@@ -27,5 +36,8 @@ public class TaxiInfo {
 
     public void setFreeTime(int freeTime) {
         this.freeTime = freeTime;
+    }
+    public String toString(){
+        return "\t"+currentPoint+"\t\t\t\t"+freeTime+"\t\t\t\t"+totalAmount;
     }
 }

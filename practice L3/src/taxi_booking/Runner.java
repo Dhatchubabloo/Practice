@@ -15,6 +15,7 @@ public class Runner {
             info.setTaxiId(i);
             info.setcurrentPoint('A');
             info.setFreeTime(6);
+            info.setTotalAmount(0);
             bookingInfo.setTaxiId(i);
             bookingInfo.setBookingId(0);
             bookingInfo.setPayAmount(0);
@@ -55,11 +56,19 @@ public class Runner {
                 info.setBookingId(++bookingid);
                 tripList.add(info);
                 ArrayList<Integer> result = logic.booking(tripList);
-                System.out.println("Amount to pay :"+result.get(0));
-                System.out.println("Taxi"+result.get(1)+" is Booked");
+                if(result.get(2)<4) {
+                    System.out.println("Amount to pay :" + result.get(0));
+                    System.out.println("Taxi" + result.get(1) + " is Booked");
+                }
+                else
+                    System.out.println("No taxi availale...your Booking was Rejected");
                 execution();
                 break;
             case 2:
+                System.out.println("Taxi No | current point | free time | total Earning");
+                for(Map.Entry entry : logic.getTaxiDetails().entrySet()){
+                    System.out.println("Taxi -"+entry.getKey()+"\t"+entry.getValue());
+                }
                 System.out.println("Booking-id | From | To | pick-time | drop-time | amount");
                 for(Map.Entry entry: logic.getBookingDetails().entrySet()){
                     System.out.println("Taxi -"+entry.getKey());

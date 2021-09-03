@@ -15,8 +15,10 @@ public class Alphabets {
                 value = 65 + (rem - 1);
                 result += (char) value;
             }
-            else
-                result+='Z';
+            else {
+                result += 'Z';
+                temp--;
+            }
             temp = temp / 26;
         }
         StringBuffer sb = new StringBuffer(result);
