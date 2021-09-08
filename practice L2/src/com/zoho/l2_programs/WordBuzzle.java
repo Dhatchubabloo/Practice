@@ -39,10 +39,10 @@ public class WordBuzzle {
                     y++;startRow=i;startcol=j;
                     boolean flag = true;
                     while (flag) {
-                        if (subString.charAt(y) == mat[i][++j] && y < subString.length()-1&&j<col) {
+                        if (subString.charAt(y) == mat[i][++j] && y < subString.length()-1&&j<col-1) {
                             count++;
                             y++;endRow=i;endcol=j;
-                        } else if (subString.charAt(y) == mat[++i][--j] && y < subString.length()-1&&i<row) {
+                        } else if (subString.charAt(y) == mat[++i][--j] && y < subString.length()-1&&i<row-1) {
                             count++;
                             y++;endRow=i;endcol=j;
                         } else {

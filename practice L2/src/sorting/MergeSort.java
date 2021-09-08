@@ -1,55 +1,53 @@
 package sorting;
+public class  MergeSort{
 
-import java.util.Scanner;
+    void merger(int []arr,int left,int mid,int right){
+        int ls = mid-left+1;
+        int rs = right-mid;
+        int leftArray[] = new int[ls];
+        int rightArray[] = new int[rs];
 
-public class MergeSort {
-    public static void main(String[]args) {
-        Scanner scan = new Scanner(System.in);
-        int number = scan.nextInt();
-        int array[] = new int[number];
-        for (int i = 0; i < number; i++) {
-            array[i] = scan.nextInt();
+        for(int i=0;i<ls;i++){
+            leftArray[i] = arr[i+left];
         }
-        msort(array,0,number-1);
+        for(int i=0;i<rs;i++){
+            rightArray[i] = arr[i+mid+1];
+        }
+        int i=0;
+        int j=0;int k=left;
+        while(i<ls&&j<rs){
+            if(leftArray[i]<rightArray[j]){
+                arr[k] = leftArray[i];
+                i++;
+            }
+            else{
+                arr[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+        while(i<ls){
+            arr[k] = leftArray[i];
+            i++;k++;
+        }
+        while(j<rs){
+            arr[k] = rightArray[j];
+            j++;k++;
+        }
     }
-    private static void msort(int[] array, int low, int high) {
-        int i = low;
-        int j = high;
-        if(i<j){
-            int mid = (i+j)/2;
-            msort(array, i, mid);
-            msort(array,mid+1,j);
-            merge(array,i,mid,j);
+    public void sort(int arr[],int left,int right){
+        if(right>left){
+            int mid = (right+left)/2;
+            sort(arr,left,mid);
+            sort(arr,mid+1,right);
+            merger(arr,left,mid,right);
         }
     }
-    private static void merge(int[] array, int low, int mid, int high) {
-        int i =low;
-        int j = mid+1;
-        int k =low;
-        int temp[] = new int[array.length];
-        while(i<=mid&&j<=high){
-           if(array[i]<array[j]){
-               temp[k]=array[i];
-               k++;i++;
-           }
-           else{
-               temp[k] = array[j];
-               k++;j++;
-           }
-        }
-        while(i<=mid){
-            temp[k] = array[i];
-            k++;i++;
-        }
-        while(j<=high){
-            temp[k] = array[j];
-            k++;j++;
-        }
-       for(i=0;i< array.length;i++){
-           array[i] = temp[i];
-       }
-       for(i=0;i< array.length;i++){
-           System.out.println(array[i]);
-       }
+    public static void main(String[]args){
+        int arr[] = {5,2,9,12,6,34,25};
+        MergeSort merge = new MergeSort();
+        merge.sort(arr,0, arr.length-1);
+        for(int i:arr)
+            System.out.print(i+" ");
     }
 }
