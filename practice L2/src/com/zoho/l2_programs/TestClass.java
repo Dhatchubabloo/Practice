@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 public class TestClass {
     public static void main(String []args){
-       String str = "home";
-       StringBuffer sb = new StringBuffer(str);
-        System.out.println(str);
-        str = new String(sb.reverse());
-        System.out.println(str);
-
+        ArrayList al = new ArrayList();
+        for(int i=0;i<5;i++){
+            al.add(i);
+        }
+        al.remove(2);
+        al.add(2,10);
+        System.out.println(al);
     }
 }

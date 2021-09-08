@@ -35,9 +35,11 @@ public class SortByFactors {
                     index=i;
                 }
             }
+
             array[j]= list.get(index-1);
             list.remove(index);
             list.add(index,-1);
+
         }
         for(int i=0;i<size;i++){
             System.out.print(array[i]+" ");
