@@ -30,26 +30,14 @@ public class Runner {
         Logical logic = new Logical();
         System.out.println("Enter events");
         ArrayList<EventInfo> eventList = new ArrayList<>();
-        for(int i=0;i<18;i++){
+        for(int i=0;i<19;i++){
             EventInfo info = new EventInfo();
             String event = scan.nextLine();
             info.setEvent(event);
-            String array[] = event.split(" ");
-            int len = array.length;
-            String time1 = array[len-1];int sum=0;
-            if(time1.equals("lightning")){
-                info.setDuration(5);
-                eventList.add(info);
-                continue;
-            }
-            for(int j=0;j<2;j++){
-                sum = (sum*10)+time1.charAt(j)-48;
-            }
-            System.out.println(sum+"sum");
-            info.setDuration(sum);
             eventList.add(info);
         }
-        ArrayList<String> orderList =logic.eventManagement(eventList);
+        ArrayList<EventInfo> list = logic.setTime(eventList);
+        ArrayList<String> orderList =logic.eventManagement(list);
         System.out.println("Track-1");
         for(String i:orderList)
             System.out.println(i);

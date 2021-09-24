@@ -68,6 +68,30 @@ public class Logical {
             orderList.add("5.00PM Network class");
         return orderList;
     }
+
+    ArrayList<EventInfo> setTime(ArrayList<EventInfo> infoList){
+        for(int i=0;i<infoList.size();i++){
+            System.out.println(i);
+            EventInfo info = infoList.get(i);
+            String event = info.getEvent();
+            String array[] = event.split(" ");
+            int len = array.length;
+            String time1 = array[len-1];int sum=0;
+            if(time1.equals("lightning")){
+                info.setDuration(5);
+                infoList.add(info);
+                //continue;
+            }
+            else {
+                for (int j = 0; j < 2; j++) {
+                    sum = (sum * 10) + time1.charAt(j) - 48;
+                }
+                System.out.println(sum + "sum");
+                info.setDuration(sum);
+            }
+        }
+        return infoList;
+    }
     String getBeforeTime(int startTime,EventInfo info){
         int minute = startTime%60;
         int hour = startTime/60;
