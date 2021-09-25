@@ -64,7 +64,7 @@ public enum Cache {
             confirmMap.put(racInfo.getTicketId(), temp);
             if(waitList.size()!=0) {
                 PassengerInfo waitInfo = waitList.remove(0);
-                waitInfo.setStatus("WaitingList");
+                waitInfo.setStatus("RAC");
                 racList.add(waitInfo);
             }
         }
