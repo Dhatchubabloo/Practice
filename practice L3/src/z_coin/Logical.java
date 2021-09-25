@@ -7,18 +7,14 @@ import java.util.Map;
 
 public class Logical {
     private int zid =1000;
+    private static int Zcrate = 2;
     HashMap<Integer,UserInfo>validMap =new HashMap<>();
     Boolean passwordChecker(String password){
         return true;
     }
 
-    String zeRegistration(UserInfo info){
-        Cache.OBJECT.setZEcredentials(info);
-        return "Registered successfully";
-    }
-
-    UserInfo getZE(){
-        return Cache.OBJECT.getZEcredentials();
+    public void setZcrate(int rate){
+        Zcrate = rate;
     }
     void userRegistration(UserInfo info){
        Cache.OBJECT.setUserData(info);
@@ -40,9 +36,6 @@ public class Logical {
             UserInfo info = list.get(i);
             validMap.put(info.getZid(), info);
         }
-    }
-    HashMap<Integer,UserInfo> getApproveList(){
-        return validMap;
     }
     UserInfo getAccountDetails(String mail){
         UserInfo info = null;
@@ -110,7 +103,7 @@ public class Logical {
             if (entry.getKey().equals(mailId)){
                 UserInfo val = entry.getValue();
                 if (amount <= val.getRcAmount()) {
-                    double zCoin = amount/2;
+                    double zCoin = amount/Zcrate;
                     Cache.OBJECT.checkMapUpdation(zCoin,mailId);
                     return "RC converted into :"+zCoin+"ZC";
                 }
@@ -121,7 +114,22 @@ public class Logical {
         }
         return null;
     }
-
+    public String rcConversion(double zcAmount,String mailId){
+        for (Map.Entry<String, UserInfo> entry : Cache.OBJECT.getchecMap().entrySet()) {
+            if (entry.getKey().equals(mailId)) {
+                UserInfo val = entry.getValue();
+                if(zcAmount<=val.getZCamount()){
+                    double  rc= (zcAmount*2)*0.0015;
+                    val.setRcAmount(rc);
+                    Cache.OBJECT.checkMapUpdation(val);
+                    double zc = val.getZCamount()-zcAmount;
+                    Cache.OBJECT.checkMapUpdation(zc,mailId);
+                    return "your ZC converted into "+rc+" RC";
+                }
+            }
+        }
+        return null;
+    }
     public HashMap<Integer,ArrayList<RC_TransactionInfo>> getRCtransaction(){
         return Cache.OBJECT.getRCTransactionData();
     }
@@ -131,7 +139,8 @@ public class Logical {
     public String zcAccountTransfer(int from,int to,double zamount){
         ZC_TransactionInfo info = new ZC_TransactionInfo();
         UserInfo fromUser = validMap.get(from);
-        double zcoin = fromUser.getZCamount();
+        double ZCamount= fromUser.getZCamount();
+        double zcoin = ZCamount;
         if(zcoin>=zamount){
             info.setType("ZC Transaction to");
             double balance = zcoin-zamount;

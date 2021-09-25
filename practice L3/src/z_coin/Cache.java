@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 public enum Cache {
     OBJECT;
-    UserInfo ZEinfo = new UserInfo();
     HashMap<String,UserInfo> ApproveMap = new HashMap();
     HashMap<Integer,ArrayList<RC_TransactionInfo>> rcTransactionInfomap = new HashMap<>();
     HashMap<Integer,ArrayList<ZC_TransactionInfo>> zcTransactionInfomap = new HashMap<>();
@@ -26,12 +25,6 @@ public enum Cache {
        info.setZCamount(zcAmount);
        ApproveMap.put(mailID,info);
    }
-    void setZEcredentials(UserInfo data){
-        ZEinfo = data;
-    }
-    UserInfo getZEcredentials(){
-        return ZEinfo;
-    }
     void setUserData(UserInfo user){
       userList.add(user);
     }
