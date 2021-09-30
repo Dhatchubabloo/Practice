@@ -27,15 +27,20 @@ public class Runner {
             switch (scan.nextInt()) {
                 case 1:
                     CustomerInfo info = new CustomerInfo();
+                    String temp="";
                     System.out.println("Enter Name");
                     scan.nextLine();
-                    info.setName(scan.nextLine());
+                    String name =scan.nextLine();
+                    info.setName(name);
                     System.out.println("Enter User name");
-                    info.setUsername(scan.nextLine());
+                    String userMail =scan.nextLine();
+                    info.setUsername(userMail);
                     System.out.println("Enter password");
-                    info.setPassword(scan.next());
+                    String passWord =scan.next();
+                    info.setPassword(passWord);
                     System.out.println("Enter Mobile Number");
-                    info.setMobileNo(scan.nextLong());
+                    long mobile = scan.nextLong();
+                    info.setMobileNo(mobile);
                     System.out.println(logic.signup(info));
                     break;
                 case 2:
@@ -114,7 +119,7 @@ public class Runner {
                                                 System.out.println("Items : ");
                                                 ArrayList<ItemInfo> list = invoice.getItemList();
                                                 for (ItemInfo it : list)
-                                                    System.out.println("Brand : " + it.getBrand() + " Model : " + it.getModel() + " price : " + it.getPrice());
+                                                    System.out.println("category : "+it.getCategory()+" Brand : " + it.getBrand() + " Model : " + it.getModel() + " price : " + it.getPrice());
                                                 System.out.println("Total Amount : " + invoice.getTotalAmount());
                                             }
                                         }
@@ -142,29 +147,26 @@ public class Runner {
                                 System.out.println();
                                 if(number++==0) {
                                     System.out.println("you need to change password");
-                                    AdminInfo adminInfo = new AdminInfo();
-                                    System.out.println("Enter new password");
-                                    String newPass = scan.next();
-                                    System.out.println("Re enter the password");
-                                    String rePass = scan.next();
-                                    if (newPass.equals(rePass)) {
-                                        adminInfo.setPassword(newPass);
-                                        adminInfo.setUserName(userName);
-                                        System.out.println(logic.adminChangePassword(adminInfo, password));
-                                    }
+                                    changePassword(userName,password);
                                 }
-                                System.out.println("Item Display(stock<10)");
-                                ArrayList<ItemInfo> stockInfo = logic.lessStockDisplay();
-                                if(stockInfo!=null) {
-                                    for (ItemInfo stock : stockInfo) {
-                                        System.out.println(stock);
-                                        System.out.println("Enter reordering quantity");
-                                        int quantity = scan.nextInt();
-                                        System.out.println(logic.addStock(stock, quantity));
-                                    }
+                                System.out.println("1.reorder\n2.Change password");
+                                switch (scan.nextInt()) {
+                                    case 1:
+                                    ArrayList<ItemInfo> stockInfo = logic.lessStockDisplay();
+                                    if (stockInfo != null) {
+                                        for (ItemInfo stock : stockInfo) {
+                                            System.out.println(stock);
+                                            System.out.println("Enter reordering quantity");
+                                            int quantity = scan.nextInt();
+                                            System.out.println(logic.addStock(stock, quantity));
+                                        }
+                                    } else
+                                        System.out.println("No items are available to reorder");
+
+                                    case 2:
+                                        changePassword(userName,password);
+
                                 }
-                                else
-                                    System.out.println("No items are available to reorder");
                             }
                     }
                     break;
@@ -197,5 +199,17 @@ public class Runner {
         System.out.println("Enter Model");
         items.setModel(scan.next());
         return items;
+    }
+    static void changePassword(String userName,String password){
+        AdminInfo adminInfo = new AdminInfo();
+        System.out.println("Enter new password");
+        String newPass = scan.next();
+        System.out.println("Re enter the password");
+        String rePass = scan.next();
+        if (newPass.equals(rePass)) {
+            adminInfo.setPassword(newPass);
+            adminInfo.setUserName(userName);
+            System.out.println(logic.adminChangePassword(adminInfo, password));
+        }
     }
 }

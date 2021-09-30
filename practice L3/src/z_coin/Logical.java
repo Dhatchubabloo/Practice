@@ -119,7 +119,7 @@ public class Logical {
             if (entry.getKey().equals(mailId)) {
                 UserInfo val = entry.getValue();
                 if(zcAmount<=val.getZCamount()){
-                    double  rc= (zcAmount*2)*0.0015;
+                    double  rc= (zcAmount*2)-0.0015;
                     val.setRcAmount(rc);
                     Cache.OBJECT.checkMapUpdation(val);
                     double zc = val.getZCamount()-zcAmount;

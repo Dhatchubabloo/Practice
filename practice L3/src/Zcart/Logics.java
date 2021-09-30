@@ -32,17 +32,12 @@ public class Logics {
         }
         else
             return "Invalid username";
-
     }
     ArrayList<CustomerInfo> getCustomerData(){
         ArrayList<CustomerInfo>customerList = new ArrayList<>();
-        FileReader fr=null;
-        BufferedReader br=null;
-        try {
-            File file = new File("C:\\Users\\ELCOT\\IdeaProjects\\PracticeDemo\\practice L3\\src\\Zcart\\zuser.txt");
+        File file = new File("/home/inc5/IdeaProjects/Practice/practice L3/src/Zcart/zuser.txt");
+        try (FileReader fr = new FileReader(file);BufferedReader br = new BufferedReader(fr)){
             file.createNewFile();
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
                 int i=0;
@@ -59,41 +54,20 @@ public class Logics {
 
             System.out.println(e);
         }
-        finally {
-            try {
-                fr.close();
-                br.close();
-            }catch(Exception e){
-                System.out.println(e);
-            }
-        }
         return customerList;
     }
-    String  encrypt(String password){
-        char array[] = password.toCharArray();
-        for(int i=0;i<password.length();i++){
-            if (array[i] == 'Z') {
-                array[i] = 'A';
-            }
-            else if(array[i]=='z'){
-                array[i]='a';
-            }
-            else if(array[i]=='9'){
-                array[i]='0';
-            }
-            else{
-                array[i] = (char)((int)array[i]+1);
-            }
-        }
-        String encrypt = new String(array);
-        return encrypt;
+
+    void setCustomerData(){
+        //ArrayList<CustomerInfo>customerList = new ArrayList<>();
+        File file = new File("/home/inc5/IdeaProjects/Practice/practice L3/src/Zcart/zuser.txt");
+
     }
     ArrayList<ItemInfo> getItemData(){
         ArrayList<ItemInfo>itemList = new ArrayList<>();
         FileReader fr=null;
         BufferedReader br = null;
         try {
-            File file = new File("C:\\Users\\ELCOT\\IdeaProjects\\PracticeDemo\\practice L3\\src\\Zcart\\zkart.txt");
+            File file = new File("/home/inc5/IdeaProjects/Practice/practice L3/src/Zcart/zkart.txt");
             file.createNewFile();
             fr = new FileReader(file);
             br = new BufferedReader(fr);
@@ -123,6 +97,27 @@ public class Logics {
         }
         return itemList;
     }
+
+    String  encrypt(String password){
+        char array[] = password.toCharArray();
+        for(int i=0;i<password.length();i++){
+            if (array[i] == 'Z') {
+                array[i] = 'A';
+            }
+            else if(array[i]=='z'){
+                array[i]='a';
+            }
+            else if(array[i]=='9'){
+                array[i]='0';
+            }
+            else{
+                array[i] = (char)((int)array[i]+1);
+            }
+        }
+        String encrypt = new String(array);
+        return encrypt;
+    }
+
     void itemInitialisation(ArrayList<ItemInfo> itemList){
         HashMap<String, HashMap<String,ArrayList<ItemInfo>>> map = Cache.OBJECT.getItemMap();
         for(int i=0;i<itemList.size();i++){
@@ -173,6 +168,8 @@ public class Logics {
     String shopping(ArrayList<ItemInfo> list){
         HashMap<String, HashMap<String,ArrayList<ItemInfo>>>map =  Cache.OBJECT.getItemMap();
         ArrayList<ItemInfo>cartList = new ArrayList<>();
+        ItemInfo dealInfo = getDealOfMonth();
+        int dealcount=0;
         double amount=0;
         for(int i=0;i<list.size();i++){
             int count=0;
@@ -180,14 +177,21 @@ public class Logics {
             ItemInfo info = list.get(i);
             HashMap<String,ArrayList<ItemInfo>>itemMap = map.get(info.getCategory());
             if(itemMap.containsKey(info.getBrand())) {
+                if(info.getBrand().equals(dealInfo.getBrand()))
+                    dealcount++;
                 ArrayList<ItemInfo> itemList = itemMap.get(info.getBrand());
                 for (int j = 0; j < itemList.size(); j++) {
                     ItemInfo in = itemList.get(j);
                     if (in.getModel().equals(info.getModel())) {
+                        if(info.getModel().equals(dealInfo.getModel()))
+                            dealcount++;
                         int stock = in.getStock();
                         if (stock > 0) {
                             price = in.getPrice();
-                            amount += in.getPrice();
+                            if(dealcount==2){
+                                price = (price*10)/100;
+                            }
+                            amount += price;
                             in.setStock(--stock);
                             itemMap.put(info.getBrand(), itemList);
                             map.put(info.getCategory(), itemMap);
@@ -209,7 +213,6 @@ public class Logics {
         return "Your Invoice amount is : "+amount;
     }
     ArrayList<ItemInfo>getCartList(String userName){
-        CustomerInfo info = Cache.OBJECT.getCustomerMap().get(userName);
         ArrayList<ItemInfo> cartList = Cache.OBJECT.getCartList();
         ArrayList invoiceList = Cache.OBJECT.getInvoiceMap().getOrDefault(userName,new ArrayList<>());
         InvoiceInfo invoiceinfo = new InvoiceInfo();
@@ -277,5 +280,40 @@ public class Logics {
             }
         }
         return "Reordering successfully";
+    }
+    ItemInfo getDealOfMonth(){
+        int max=0;
+        ItemInfo dealInfo = new ItemInfo();
+        for(Map.Entry<String,HashMap<String,ArrayList<ItemInfo>>>map:Cache.OBJECT.getItemMap().entrySet()){
+            for(Map.Entry <String,ArrayList<ItemInfo>> inner:map.getValue().entrySet()){
+                ArrayList<ItemInfo> infoList = inner.getValue();
+                for(ItemInfo info : infoList){
+                    if(info.getStock()>max){
+                        max = info.getStock();
+                        dealInfo.setModel(info.getModel());
+                        dealInfo.setBrand(info.getBrand());
+                    }
+                }
+            }
+        }
+        return dealInfo;
+    }
+
+    String generateDiscountCode(){
+        String tempStr = "abtuoshet";
+        char randomStrArray[] = tempStr.toCharArray();
+        char randomIntArray[] ={'1','2','3','4','5','6','7','8','9','0'};
+        double temp = Math.random()*1000000;
+        int randomLength = (int)temp;
+        String randomString = "";
+        while(randomLength>0){
+            int index = randomLength%10;
+            randomString+=randomStrArray[index];
+            randomLength/=10;
+            index = randomLength%10;
+            randomString+=randomIntArray[index];
+            randomLength/=10;
+        }
+        return randomString;
     }
 }
