@@ -49,4 +49,11 @@ public enum Cache {
         this.itemMap = itemMap;
     }
 
+    public static void main(String[] args) {
+        Logics logic = new Logics();
+        logic.customerInitialisation(logic.getCustomerData());
+        logic.itemInitialisation(logic.getItemData());
+        System.out.println(OBJECT.itemMap);
+    }
+
 }

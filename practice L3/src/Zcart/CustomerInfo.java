@@ -58,4 +58,12 @@ public class CustomerInfo {
     public void setMobileNo(long mobileNo) {
         MobileNo = mobileNo;
     }
+
+    @Override
+    public String toString() {
+        return "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", MobileNo=" + MobileNo;
+    }
 }

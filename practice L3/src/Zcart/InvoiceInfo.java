@@ -39,4 +39,13 @@ public class InvoiceInfo {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    @Override
+    public String toString() {
+        return "InvoiceInfo{" +
+                "invoiceNo=" + invoiceNo +
+                ", totalAmount=" + totalAmount +
+                ", itemList=" + itemList +
+                '}';
+    }
 }

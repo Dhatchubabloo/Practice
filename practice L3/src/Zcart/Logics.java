@@ -3,15 +3,22 @@ package Zcart;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Logics {
     private long invoiceNo = 1000;
     void setAdminCredentials(AdminInfo info){
         Cache.OBJECT.setAdminInfo(info);
+    }
+
+    String adminChangePassword(AdminInfo info,String oldPass){
+        AdminInfo adinfo = Cache.OBJECT.getAdminInfo();
+        adinfo.setPassword(encrypt(info.getPassword()));
+        List<String> list = adinfo.getPasswordList();
+        if(list==null)
+            list = new ArrayList<>();
+        list.add(oldPass);
+        return "Password Changed Successfully";
     }
 
     public String checkAdminCredentials(AdminInfo info){
@@ -32,7 +39,7 @@ public class Logics {
         FileReader fr=null;
         BufferedReader br=null;
         try {
-            File file = new File("/home/inc5/IdeaProjects/Practice/practice L3/src/Zcart/zuser.txt");
+            File file = new File("C:\\Users\\ELCOT\\IdeaProjects\\PracticeDemo\\practice L3\\src\\Zcart\\zuser.txt");
             file.createNewFile();
             fr = new FileReader(file);
             br = new BufferedReader(fr);
@@ -86,7 +93,9 @@ public class Logics {
         FileReader fr=null;
         BufferedReader br = null;
         try {
-            fr = new FileReader("/home/inc5/IdeaProjects/Practice/practice L3/src/Zcart/zkart.txt");
+            File file = new File("C:\\Users\\ELCOT\\IdeaProjects\\PracticeDemo\\practice L3\\src\\Zcart\\zkart.txt");
+            file.createNewFile();
+            fr = new FileReader(file);
             br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
@@ -115,10 +124,10 @@ public class Logics {
         return itemList;
     }
     void itemInitialisation(ArrayList<ItemInfo> itemList){
-        HashMap<String, HashMap<String,ArrayList<ItemInfo>>> map = new HashMap<>();
+        HashMap<String, HashMap<String,ArrayList<ItemInfo>>> map = Cache.OBJECT.getItemMap();
         for(int i=0;i<itemList.size();i++){
             ItemInfo info = itemList.get(i);
-            HashMap<String,ArrayList<ItemInfo>> inner = Cache.OBJECT.getItemMap().getOrDefault(info.getCategory(),new HashMap<String,ArrayList<ItemInfo>>());
+            HashMap<String,ArrayList<ItemInfo>> inner = map.getOrDefault(info.getCategory(),new HashMap<String,ArrayList<ItemInfo>>());
             ArrayList<ItemInfo> itemsList = inner.getOrDefault(info.getBrand(),new ArrayList<ItemInfo>());
             itemsList.add(info);
             inner.put(info.getBrand(),itemsList);
@@ -179,7 +188,7 @@ public class Logics {
                         if (stock > 0) {
                             price = in.getPrice();
                             amount += in.getPrice();
-                            in.setStock(--stock);//***************
+                            in.setStock(--stock);
                             itemMap.put(info.getBrand(), itemList);
                             map.put(info.getCategory(), itemMap);
                             Cache.OBJECT.setItemMap(map);
@@ -202,17 +211,15 @@ public class Logics {
     ArrayList<ItemInfo>getCartList(String userName){
         CustomerInfo info = Cache.OBJECT.getCustomerMap().get(userName);
         ArrayList<ItemInfo> cartList = Cache.OBJECT.getCartList();
-        ArrayList<InvoiceInfo> invoiceList= info.getInvoiceList();
-        if(invoiceList==null)
-            invoiceList = new ArrayList<>();
+        ArrayList invoiceList = Cache.OBJECT.getInvoiceMap().getOrDefault(userName,new ArrayList<>());
         InvoiceInfo invoiceinfo = new InvoiceInfo();
         ArrayList<ItemInfo> itemList= invoiceinfo.getItemList();
         if(itemList==null)
             itemList = new ArrayList<>();
         double amount=0;
-        for(int i=0;i<cartList.size();i++){
-            itemList.add(cartList.get(i));
-            amount+=cartList.get(i).getPrice();
+        for (ItemInfo itemInfo : cartList) {
+            itemList.add(itemInfo);
+            amount += itemInfo.getPrice();
         }
         invoiceinfo.setInvoiceNo(invoiceNo++);
         invoiceinfo.setTotalAmount(amount);
@@ -226,6 +233,8 @@ public class Logics {
         CustomerInfo info = cusMap.get(username);
         ArrayList<String>passwordList = info.getPasswordList();
         if(passwordList!=null){
+            if(passwordList.size()>3)
+                passwordList.remove(passwordList.get(0));
             if(passwordList.contains(newPassword)){
                 return "don't use this password...please use Another password";
             }
@@ -235,7 +244,7 @@ public class Logics {
             passwordList = new ArrayList<>();
             passwordList.add(info.getPassword());
         }
-        info.setPassword(newPassword);
+        info.setPassword(encrypt(newPassword));
         cusMap.put(username,info);
         Cache.OBJECT.setCustomerMap(cusMap);
         return "Password Changed Successfully....!";
