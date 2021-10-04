@@ -9,6 +9,15 @@ public class PlayerInfo {
     private float matchPoint;
     private float bonusPoint;
     private String opponent;
+    private float cumulativepoint;
+
+    public float getCumulativepoint() {
+        return cumulativepoint;
+    }
+
+    public void setCumulativepoint(float cumulativepoint) {
+        this.cumulativepoint = cumulativepoint;
+    }
 
     public String getOpponent() {
         return opponent;
@@ -18,7 +27,17 @@ public class PlayerInfo {
         this.opponent = opponent;
     }
 
-    private ArrayList<String>opponentList;
+   // private ArrayList<String>opponentList;
+    private ArrayList<Integer>opponentIdList;
+
+    public ArrayList<Integer> getOpponentIdList() {
+        return opponentIdList;
+    }
+
+    public void setOpponentIdList(ArrayList<Integer> opponentIdList) {
+        this.opponentIdList = opponentIdList;
+    }
+
     private ArrayList<String>resultList;
 
     public float getMatchPoint() {
@@ -79,21 +98,22 @@ public class PlayerInfo {
         this.point = point;
     }
 
-    public ArrayList<String> getOpponentList() {
-        return opponentList;
-    }
-
-    public void setOpponentList(ArrayList<String> opponentList) {
-        this.opponentList = opponentList;
-    }
+//    public ArrayList<String> getOpponentList() {
+//        return opponentList;
+//    }
+//
+//    public void setOpponentList(ArrayList<String> opponentList) {
+//        this.opponentList = opponentList;
+//    }
 
     @Override
     public String toString() {
         return "name='" + name+
                 ", point=" + point +
+                ", Player id="+playerId+
                 ", bonusPoint=" + bonusPoint +
-                ", opponentList=" + opponentList +
                 ", resultList=" + resultList +
+                ", oppidList ="+opponentIdList+
                 '}';
     }
 }

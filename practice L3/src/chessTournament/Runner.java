@@ -38,6 +38,7 @@ public class Runner {
                     info1.getValue().setOpponent(info2.getValue().getName());
                     info2.getValue().setOpponent(info1.getValue().getName());
                     System.out.println(info1.getValue().getName()+" \tvs\t "+info2.getValue().getName());
+                    System.out.println("Not by Values=============================================>");
                 }
             }
             else {
@@ -50,11 +51,13 @@ public class Runner {
                 }
                 Map.Entry<Integer, PlayerInfo> byes = list.get(list.size() - 1);
                 PlayerInfo oddin = byes.getValue();
-
                 System.out.println(oddin.getName() + " gets a Bye");
+                System.out.println("bye values =====================================================>");
                // PlayerInfo byeinfo = oddin;
             }
+            logic.opponentSet();
             List<Map.Entry<Integer,PlayerInfo>> pointList  = logic.getPoints(list);
+
 
             System.out.println();
                 System.out.println("Result of Round "+i);
@@ -91,15 +94,32 @@ public class Runner {
                         String point = points.getValue().getName()+"("+points.getValue().getPoint()+")";
                     System.out.println(point);
                 }
-
         }
-        System.out.println("view player details\n2.view player Rank");
-        switch (scan.nextInt()){
-            case 1:
-                System.out.println("Enter player name");
-                scan.nextLine();
-                String playerName = scan.nextLine();
 
+        System.out.println();
+        int k=0;
+        while(k==0) {
+            System.out.println("1.view player details\n2.view player Rank\n3.Exit");
+            switch (scan.nextInt()) {
+                case 1:
+                    System.out.println("Enter player name");
+                    scan.nextLine();
+                    String playerName = scan.nextLine();
+                    ArrayList<String> list = logic.getPlayerDetails(playerName);
+                    for (String val : list)
+                        System.out.println(val);
+                    break;
+
+                case 2:
+                    ArrayList<String> rankList = logic.getPlayerRank();
+                    for (String val : rankList)
+                        System.out.println(val);
+                    break;
+
+                case 3:
+                    k++;
+                    break;
+            }
         }
     }
 }
